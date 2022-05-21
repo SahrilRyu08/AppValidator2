@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="csv-file-validator" default="rebuildAll" basedir=".">
+    <property name="srcDir" value="src" />
+    <property name="outDir" value="build"/>
+    <property name="jarDir" value="jar-fv"/>
+    <property name="classDir" value="${jarDir}/classes"/>
+    <property name="libDir" value="lib" />
+    <property name="obfuscatorDir" value="obfuscator"/>
+    <property name="clapUtilName" value="csvfv-1.1"/>
+
+    <target name="cleanBuiltClasses">
+        <delete dir="${classDir}" />
+        <mkdir dir="${classDir}" />
+    </target>
+
+    <target name="compile">
+        <echo message="${ant.project.name}: ${ant.file}" />
+        <echo message="Java-Runtime=${java.runtime.version}; Java-VM=${java.vm.version}" />
+        <javac srcdir="${srcDir}" destdir="${classDir}" debug="true" includeAntRuntime="false">
+            <classpath>
+                <fileset dir="${libDir}">
+                    <patternset includes="**/*.jar" />
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="archiveClapUtil">
+        <jar jarfile="${outDir}/${clapUtilName}.jar" basedir="${classDir}">
+            <exclude name="**/*.old*" />
+            <exclude name="**/*.bak*" />
+        </jar>
+    </target>
+    <target name="rebuildAll" depends="cleanBuiltClasses, compile, archiveClapUtil" />
+</project>
