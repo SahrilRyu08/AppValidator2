@@ -3,56 +3,49 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="/passed/Laporan_Berhasil_REAFILE_C0deC0mp_c0depr0d_21052022.csv">
+        <entry key="/passed/Laporan_Berhasil_REPAYMENT_C0deC0mp_c0depr0d_22052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="/passed/Laporan_Berhasil_REAFILE_C0mpC0de_pr0dc0de_21052022.csv">
+        <entry key="/passed/Laporan_Gagal_REPAYMENT_C0deC0mp_c0depr0d_22052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="|" />
             </Attribute>
           </value>
         </entry>
-        <entry key="/passed/Laporan_Gagal_PENGURUS_C0deC0mp_c0depr0d_21052022.csv">
+        <entry key="/passed/Laporan_Gagal_REPAYMENT_C0mpC0de_pr0dc0de_22052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="|" />
             </Attribute>
           </value>
         </entry>
-        <entry key="/passed/Laporan_Gagal_REAFILE_C0deC0mp_c0depr0d_21052022.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="|" />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/passed/Laporan_Gagal_REAFILE_C0mpC0de_pr0dc0de_21052022.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="|" />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/result/Laporan_Berhasil_PENGURUS_C0mpC0de_pr0dc0de_20052022.csv">
+        <entry key="/result/Laporan_Berhasil_REAFILE_C0deC0mp_c0depr0d_21052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="/result/Laporan_Berhasil_REAFILE_C0mpC0de_pr0dc0de_20052022.csv">
+        <entry key="/result/Laporan_Berhasil_REAFILE_C0mpC0de_pr0dc0de_21052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="|" />
             </Attribute>
           </value>
         </entry>
-        <entry key="/result/Laporan_Berhasil_REPAYMENT_C0mpC0de_pr0dc0de_20052022.csv">
+        <entry key="/result/Laporan_Berhasil_REPAYMENT_C0deC0mp_c0depr0d_22052022.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/result/Laporan_Berhasil_REPAYMENT_C0mpC0de_pr0dc0de_22052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -66,7 +59,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/result/Laporan_Gagal_REAFILE_C0mpC0de_pr0dc0de_20052022.csv">
+        <entry key="/result/Laporan_Gagal_REAFILE_C0deC0mp_c0depr0d_22052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="|" />
@@ -80,6 +73,27 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/result/Laporan_Gagal_REAFILE_C0mpC0de_pr0dc0de_22052022.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="|" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/result/Laporan_Gagal_REPAYMENT_C0deC0mp_c0depr0d_22052022.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/result/Laporan_Gagal_REPAYMENT_C0mpC0de_pr0dc0de_22052022.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/srcfiles/PENGURUS_C0deC0mp_c0depr0d_21052022.csv">
           <value>
             <Attribute>
@@ -87,7 +101,14 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/srcfiles/PENGURUS_C0mpC0de_pr0dc0de_20052022.csv">
+        <entry key="/srcfiles/PENGURUS_C0deC0mp_c0depr0d_22052022.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="|" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/srcfiles/PENGURUS_C0mpC0de_pr0dc0de_22052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="|" />
@@ -101,7 +122,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/srcfiles/REAFILE_C0mpC0de_pr0dc0de_20052022.csv">
+        <entry key="/srcfiles/REAFILE_C0mpC0de_pr0dc0de_22052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="|" />
@@ -115,7 +136,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/srcfiles/REPAYMENT_C0mpC0de_pr0dc0de_20052022.csv">
+        <entry key="/srcfiles/REPAYMENT_C0mpC0de_pr0dc0de_21052022.csv">
           <value>
             <Attribute>
               <option name="separator" value="|" />

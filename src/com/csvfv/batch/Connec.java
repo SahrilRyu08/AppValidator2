@@ -6,7 +6,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Connec {
     private static Logger bLog = null;
@@ -25,14 +24,28 @@ public class Connec {
                 case "OS_PENGURUS": {
                     String sqlPengurus = "CREATE TABLE IF NOT EXISTS " + table + "( " +
                             "id integer  NOT NULL,created_by integer  NOT NULL,updated_by integer  NOT NULL,created_date date  NOT NULL,updated_date date  NOT NULL,status VARCHAR (3) NOT NULL,respon_status VARCHAR (3) ,keterangan_gagal VARCHAR (255) ,os_reafile_id integer  NOT NULL,no_aplikasi VARCHAR (51) NOT NULL,no_urut integer  NOT NULL,jumlah_pengurus integer  NOT NULL,jabatan_cd VARCHAR (8) NOT NULL,pangsa_kepemilikan double precision  NOT NULL,bentuk_pengurus VARCHAR (4) NOT NULL,modal_dasar double precision  NOT NULL,modal_disetor double precision  NOT NULL,modal_ditempatkan double precision  NOT NULL,npwp VARCHAR (45) NOT NULL,nama VARCHAR (80) NOT NULL,alamat VARCHAR (80) NOT NULL,kelurahan VARCHAR (80) NOT NULL,kecamatan VARCHAR (80) NOT NULL,dati2 VARCHAR (16) NOT NULL,no_ktp VARCHAR (48) ,no_akte VARCHAR (60) ,tgl_lahir date  ,tgl_akte date  ,dati2_tempat_lahir VARCHAR (16) ,gender_pengurus_cd VARCHAR (4)," +
-                            "PRIMARY KEY (id))";
+                            "PRIMARY KEY (id));";
                     stmt.executeUpdate(sqlPengurus);
                     info("create table pengurus success");
                 }
                 break;
                 case "OS_REPAYMENT": {
-                    String sqlRepayment = "CREATE TABLE IF NOT EXISTS " + table + "( " +
-                            "id integer  NOT NULL,created_by integer  NOT NULL,updated_by integer  NOT NULL,created_date date  NOT NULL,updated_date date  NOT NULL,status VARCHAR (3) NOT NULL,respon_status VARCHAR (3) ,keterangan_gagal VARCHAR (255) ,nomor_aplikasi VARCHAR () NOT NULL,nomor_pembayaran VARCHAR (40) NOT NULL,tanggal_pambayaran date (32) NOT NULL,nominal_pokok integer (45) NOT NULL,nominal_bunga integer (45) NOT NULL,nominal_denda integer (45) NOT NULL,pelunasan VARCHAR (4) NOT NULL," +
+                    String sqlRepayment = "CREATE TABLE IF NOT EXISTS " + table +
+                            "(id integer NOT NULL," +
+                            "created_by integer NOT NULL," +
+                            "updated_by integer NOT NULL," +
+                            "created_date date NOT NULL," +
+                            "updated_date date NOT NULL," +
+                            "status VARCHAR (3) NOT NULL," +
+                            "respon_status VARCHAR (3)," +
+                            "keterangan_gagal VARCHAR (255)," +
+                            "nomor_aplikasi VARCHAR NOT NULL," +
+                            "nomor_pembayaran VARCHAR (40) NOT NULL," +
+                            "tanggal_pambayaran date NOT NULL," +
+                            "nominal_pokok integer NOT NULL," +
+                            "nominal_bunga integer NOT NULL," +
+                            "nominal_denda integer NOT NULL," +
+                            "pelunasan VARCHAR (4) NOT NULL," +
                             "PRIMARY KEY (id));";
                     stmt.executeUpdate(sqlRepayment);
                     info("create table repayment success");
@@ -59,7 +72,6 @@ public class Connec {
     }
 
     public static void addData(String table, String[] list, String keterangan) {
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy")).toString();
         int id = getIdfromDatabase(table);
         switch (table) {
             case "OS_REAFILE" : {
@@ -306,9 +318,15 @@ public class Connec {
                     statement.setString(9, list[0]);
                     statement.setString(10, list[1]);
                     statement.setDate(11, convertStringToSQLDate(list[2], "ddMMyyyy"));
-                    statement.setInt(12, Integer.parseInt(list[3]));
-                    statement.setInt(13, Integer.parseInt(list[4]));
-                    statement.setInt(14, Integer.parseInt(list[5]));
+                    if (CSVService.checkValidationNominal(list).equals("VALID")) {
+                        statement.setInt(12, Integer.parseInt(list[3]));
+                        statement.setInt(13, Integer.parseInt(list[4]));
+                        statement.setInt(14, Integer.parseInt(list[5]));
+                    } else {
+                        statement.setInt(12, 0);
+                        statement.setInt(13, 0);
+                        statement.setInt(14,0);
+                    }
                     statement.setString(15, list[6]);
 
                     statement.executeUpdate();

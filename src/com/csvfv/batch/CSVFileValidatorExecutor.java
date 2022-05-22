@@ -66,8 +66,8 @@ public class CSVFileValidatorExecutor {
 							exportFile = "REAFILE_";
 						} else if (pathfile.contains("PENGURUS")) {
 							exportFile = "PENGURUS_";
-//						} else if (pathfile.contains("REPAYMENT")) {
-//							exportFile = "REPAYMENT_";
+						} else if (pathfile.contains("REPAYMENT")) {
+							exportFile = "REPAYMENT_";
 						}
 						CSVService.writeFile(pathfile, args[0], args[1], exportFile);
 						end();

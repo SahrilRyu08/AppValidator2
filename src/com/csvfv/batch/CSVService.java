@@ -184,8 +184,8 @@ public class CSVService {
                 listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", compCode));
                 listCheck.add(checkValidationNomorPembayaran(tempArr[1], "Nomor Pembayaran"));
                 listCheck.add(checkValidationTanggalPembayaran(tempArr[2], "Tanggal Pembayaran"));
-                listCheck.add(checkValidationPelunasan(tempArr[6]));
                 listCheck.addAll(checkValidationNominal(tempArr));
+                listCheck.add(checkValidationPelunasan(tempArr[6]));
                 Connec.info("listCheckRepayment");
                 break;
         }
@@ -384,10 +384,6 @@ public class CSVService {
             return MessageUtil.NotEmptyMessage(npwp_pengurus);
         } else if (!(npwp.length() == 15)) {
             return MessageUtil.ErrorNotValid(npwp_pengurus);
-        } else if (!npwp.substring(0,2).matches("01|02|03") && "1".equals(bentukPengurus)) {
-            return MessageUtil.ErrorWithMessage(npwp_pengurus, " Untuk Debitur Badan Usaha");
-        } else if (npwp.substring(0,2).matches("01|02|03") && "2".equals(bentukPengurus)) {
-            return MessageUtil.ErrorWithMessage(npwp_pengurus, " Untuk Debitur Perorangan");
         } else if (npwp.substring(0,2).matches("00")
                 && "2".equals(bentukPengurus)) {
             return MessageUtil.ErrorNotValid(npwp_pengurus);
