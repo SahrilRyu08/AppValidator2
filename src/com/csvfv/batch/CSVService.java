@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 
 public class CSVService {
-    public static ArrayList<String> getFile(String csvFile, String compCode) {
+    public static ArrayList<String> getFile(String csvFile, String[] arg) {
         ArrayList<String> arrayList = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(csvFile)));
@@ -21,11 +21,11 @@ public class CSVService {
             String[] tempArr = {};
             while ((line = br.readLine()) != null) {
                 if (csvFile.contains("REAFILE")) {
-                    result = CheckGroup(tempArr,55,compCode, line,"realisasi");
-                } else if (csvFile.contains("PENGURUS")) {
-                    result = CheckGroup(tempArr,21,compCode, line,"pengurus");
-                } else if (csvFile.contains("REPAYMENT")){
-                    result = CheckGroup(tempArr,7,compCode, line,"repayment");
+                    result = CheckGroup(tempArr,55,arg, line,"realisasi");
+//                } else if (csvFile.contains("PENGURUS")) {
+//                    result = CheckGroup(tempArr,21,arg, line,"pengurus");
+//                } else if (csvFile.contains("REPAYMENT")){
+//                    result = CheckGroup(tempArr,7,arg, line,"repayment");
                 }
                 arrayList.add(result);
             }
@@ -36,39 +36,57 @@ public class CSVService {
         }
         return arrayList;
     }
-    public static void writeFile(String pathfile, String arg, String arg1, String exportFile) {
+    public static void writeFile(String pathfile, String[] arg, String exportFile) {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy")).toString();
-        String path  = arg + "_" + arg1 + "_" + today + ".csv";
+        String path  = arg[0] + "_" + arg[1] + "_" + today + ".csv";
         String impor = pathfile + path;
         ArrayList<String> list = getFile(impor, arg);
         try {
-            FileWriter succesFileWriter = new FileWriter("result/Laporan_Berhasil_" + exportFile + path);
-            FileWriter failedFileWriter = new FileWriter("result/Laporan_Gagal_" + exportFile + path);
-            for (String s : list) {
-                if (s.contains("OK")) {
-                    succesFileWriter.write(s + System.lineSeparator());
-                } else {
-                    failedFileWriter.write(s + System.lineSeparator());
+            if (exportFile.contains("PENGURUS")) {
+                FileWriter succesFileWriter = new FileWriter("result/Laporan_Berhasil_" +
+                        exportFile + arg + "_" + arg[1] + "_" + arg[2] + "_" + today + ".csv");
+                FileWriter failedFileWriter = new FileWriter("result/Laporan_Gagal_" +
+                        exportFile + arg + "_" + arg[1] + "_" + arg[2] + "_" + today + ".csv");
+                for (String s : list) {
+                    if (s.contains("OK")) {
+                        succesFileWriter.write(s + System.lineSeparator());
+                    } else {
+                        failedFileWriter.write(s + System.lineSeparator());
+                    }
                 }
+                succesFileWriter.close();
+                failedFileWriter.close();
+            } else {
+                FileWriter succesFileWriter = new FileWriter("result/Laporan_Berhasil_" + exportFile + path);
+                FileWriter failedFileWriter = new FileWriter("result/Laporan_Gagal_" + exportFile + path);
+                for (String s : list) {
+                    if (s.contains("OK")) {
+                        succesFileWriter.write(s + System.lineSeparator());
+                    } else {
+                        failedFileWriter.write(s + System.lineSeparator());
+                    }
+                }
+                succesFileWriter.close();
+                failedFileWriter.close();
             }
+
 //            Connec.info(impor);
-            succesFileWriter.close();
-            failedFileWriter.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    private static String CheckGroup(String[] tempArr1, int i, String compCode, String line, String filename) {
+    private static String CheckGroup(String[] tempArr1, int i, String[] arg, String line, String filename) {
         String[] tempArr = tempArr1;
         String keterangan = "";
         String result = "";
         tempArr = line.split("\\|", i);
         result = tempArr[0] + "|";
-        if (Check(tempArr, compCode, filename).size() == 0) {
+        if (Check(tempArr, arg, filename).size() == 0) {
             result += "OK";
             keterangan = result;
         } else {
-            for (String s : Check(tempArr, compCode, filename)) {
+            for (String s : Check(tempArr, arg, filename)) {
                 result += s + "#";
             }
             keterangan = result;
@@ -77,29 +95,29 @@ public class CSVService {
         switch (filename) {
             case "realisasi":
 //                System.out.println(Arrays.toString(tempArr));
-                Connec.addData("OS_REAFILE", tempArr, keterangan);
+                Connec.addData("OS_REAFILE", tempArr, keterangan, arg);
                 Connec.info(filename);
                 break;
             case "pengurus":
 //                System.out.println(Arrays.toString(tempArr));
-                Connec.addData("OS_PENGURUS", tempArr, keterangan);
+                Connec.addData("OS_PENGURUS", tempArr, keterangan, arg);
                 Connec.info(filename);
                 break;
             case "repayment":
 //                System.out.println(Arrays.toString(tempArr));
-                Connec.addData("OS_REPAYMENT", tempArr, keterangan);
+                Connec.addData("OS_REPAYMENT", tempArr, keterangan, arg);
                 Connec.info(filename);
                 break;
         }
         return result;
     }
 
-    private static ArrayList<String> Check(String[] tempArr, String compCode, String nameFile) {
+    private static ArrayList<String> Check(String[] tempArr, String[] arg, String nameFile) {
         ArrayList<String> listCheck = new ArrayList<>();
         ArrayList<String> result = new ArrayList<>();
         switch (nameFile) {
             case "realisasi":
-                listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", compCode));
+                listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", arg, nameFile));
                 listCheck.add(checkValidationNamaDebitur(tempArr[1], "Nama Debitur"));
                 listCheck.add(checkvalidationJenisDebitur(tempArr[2], "Jenis Debitur"));
                 listCheck.add(checkvalidationGenderCode(tempArr[2], tempArr[3], "Gender"));
@@ -157,8 +175,8 @@ public class CSVService {
                 Connec.info("listCheckRealisasi");
                 break;
             case "pengurus":
-                listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", compCode));
-                listCheck.add(checkValidationNomorUrutPengurus(tempArr, "Nomor Urut Pengurus"));
+                listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", arg, nameFile));
+                listCheck.add(checkValidationNomorUrutPengurus(tempArr, "Nomor Urut Pengurus", arg));
                 listCheck.add(checkValidationJumlahPengurus(tempArr, "Jumlah Pengurus"));
                 listCheck.add(checkValidationSandiJabatanBI(tempArr[3], "Sandi Jabatan BI"));
                 listCheck.add(checkValidationPangsaKepemilikan(tempArr, "Pangsa Kepemilikan"));
@@ -181,7 +199,7 @@ public class CSVService {
                 Connec.info("listCheckPengurus");
                 break;
             case "repayment":
-                listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", compCode));
+                listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", arg, nameFile));
                 listCheck.add(checkValidationNomorPembayaran(tempArr[1], "Nomor Pembayaran"));
                 listCheck.add(checkValidationTanggalPembayaran(tempArr[2], "Tanggal Pembayaran"));
                 listCheck.addAll(checkValidationNominal(tempArr));
@@ -324,10 +342,16 @@ public class CSVService {
     public static String checkValidationNo_KTP(String gender, String bentukPengurus, String noKTP, String no_Ktp) {
         if (bentukPengurus.equals("2")) {
             if (noKTP.isEmpty()) {
-                return MessageUtil.NotEmptyMessage(no_Ktp);
-            } else if (noKTP.length() != 16 || noKTP.endsWith("0000") ||
-                    (Integer.parseInt(noKTP.substring(6,8)) > 31 && gender.equals("L")) ||
-                    (Integer.parseInt(noKTP.substring(6,8)) < 31 && gender.equals("P"))) {
+                return MessageUtil.NotEmptyMessage(no_Ktp + " Untuk Debitur Perorangan");
+            } else if (!noKTP.matches("^[0-9]+$")){
+                return MessageUtil.ErrorWithMessage(no_Ktp, " Harus Numeric");
+            } else if (noKTP.length() != 16 || noKTP.endsWith("0000") ) {
+                return MessageUtil.ErrorNotValid(no_Ktp);
+            } else if ((Integer.parseInt(noKTP.substring(6,8)) > 31 && gender.equals("L")) ||
+                    (Integer.parseInt(noKTP.substring(6,8)) < 31 && gender.equals("L"))) {
+                return MessageUtil.ErrorNotValid(no_Ktp);
+            } else if ((Integer.parseInt(noKTP.substring(6,8)) < 41 && gender.equals("P")) ||
+                    (Integer.parseInt(noKTP.substring(6,8)) > 71 && gender.equals("P"))) {
                 return MessageUtil.ErrorNotValid(no_Ktp);
             }
         }
@@ -384,6 +408,15 @@ public class CSVService {
             return MessageUtil.NotEmptyMessage(npwp_pengurus);
         } else if (!(npwp.length() == 15)) {
             return MessageUtil.ErrorNotValid(npwp_pengurus);
+        } else if (npwp.length() == 15
+                && !"000000000000000"
+                .equals(npwp)
+                && "2".equals(bentukPengurus)) {
+            return MessageUtil.ErrorNotValid(npwp_pengurus);
+        } else if (!npwp.substring(0,2).matches("01|02|03") && "1".equals(bentukPengurus)) {
+            return MessageUtil.ErrorNotValid(npwp_pengurus);
+        } else if (npwp.substring(0,2).matches("01|02|03") && "2".equals(bentukPengurus)) {
+            return MessageUtil.ErrorNotValid(npwp_pengurus);
         } else if (npwp.substring(0,2).matches("00")
                 && "2".equals(bentukPengurus)) {
             return MessageUtil.ErrorNotValid(npwp_pengurus);
@@ -432,6 +465,8 @@ public class CSVService {
             return MessageUtil.NotEmptyMessage(pangsa_kepemilikan);
         } else if (listPengurus[4].length() != 5 || !listPengurus[4].matches("^[0-9]+$")) {
             return MessageUtil.ErrorNotValid(pangsa_kepemilikan);
+        } else if (Integer.parseInt(listPengurus[4]) > 1000) {
+            return MessageUtil.ErrorWithMessage(listPengurus[4], " Pangsa Kepemilikan > 100%");
         }
         return "VALID";
     }
@@ -440,7 +475,7 @@ public class CSVService {
         if (sandi.isEmpty()) {
             return MessageUtil.NotEmptyMessage(sandi_jabatan_bi);
         } else if (!Enumuration.SandiJabatanBI(sandi)) {
-            return MessageUtil.ErrorNotValid(sandi_jabatan_bi);
+            return MessageUtil.ErrorWithMessage(sandi_jabatan_bi, " tidak terdaftar");
         }
         return "VALID";
     }
@@ -454,10 +489,12 @@ public class CSVService {
         return "VALID";
     }
 
-    public static String checkValidationNomorUrutPengurus(String[] listPengurus, String nomor_urut_pengurus) {
+    public static String checkValidationNomorUrutPengurus(String[] listPengurus, String nomor_urut_pengurus, String[] arg) {
         if (listPengurus[1].isEmpty()) {
             return MessageUtil.NotEmptyMessage(nomor_urut_pengurus);
-        }   else if (!listPengurus[1].matches("^[0-9]+$") || listPengurus[1].length() > 3) {
+        } else if (!listPengurus[1].matches("^[0-9]+$")) {
+            return MessageUtil.ErrorWithMessage(nomor_urut_pengurus, " Bukan Numeric");
+        } else if (listPengurus[1].length() <= 0 || Integer.parseInt(listPengurus[1]) > Connec.checkjumlahPengurusinDatabase(arg)) {
             return MessageUtil.ErrorNotValid(nomor_urut_pengurus);
         }
         return "VALID";
@@ -728,10 +765,12 @@ public class CSVService {
     }
 
     public static String checkvalidationNoAkteTerakhir(String jenisDebitur, String noAkteTerakhir, String no_akte_terakhir) {
-        if (jenisDebitur.equals("B")) {
-            if (noAkteTerakhir.isEmpty()) {
+        if (noAkteTerakhir.isEmpty()) {
+            if (jenisDebitur.equals("B")) {
                 return MessageUtil.NotEmptyMessage(no_akte_terakhir);
             }
+        } else if (noAkteTerakhir.length() > 30) {
+            return MessageUtil.ErrorNotValid(no_akte_terakhir);
         }
         return "VALID";
     }
@@ -991,16 +1030,21 @@ public class CSVService {
         }
     }
 
-    public static String checkValidationNomorAplikasi(String nomorAplikasi, String nomor_aplikasi, String arg) {
+    public static String checkValidationNomorAplikasi(String nomorAplikasi, String nomor_aplikasi, String[] arg, String nameFile) {
         if (nomorAplikasi.isEmpty()) {
             return MessageUtil.NotEmptyMessage(nomor_aplikasi);
+        } else if (nameFile.equals("pengurus")) {
+            if (Connec.checkDBRealisasiforNoApplikasi(arg)) {
+                return MessageUtil.ErrorWithMessage(nomor_aplikasi,"Nomor Aplikasi tidak terdaftar");
+            }
         } else if (nomorAplikasi.length() != 17 || !nomorAplikasi.substring(0, 7).matches("^[a-zA-Z0-9]+$")) {
             return MessageUtil.ErrorNotValid(nomor_aplikasi);
-        } else if (!nomorAplikasi.substring(0,7).equals(arg.substring(0,7))){
+        } else if (!nomorAplikasi.substring(0,7).equals(arg[1].substring(0,7))){
             return MessageUtil.ErrorWithMessage(nomor_aplikasi,"Company Code pada File Name berbeda dengan Isi File");
         }
         return "VALID";
     }
+
     public static void uploadToFileServer(String path,
                                           String fileServerLocation) {
         String originDir = "result/";

@@ -71,7 +71,7 @@ public class Connec {
         return 0;
     }
 
-    public static void addData(String table, String[] list, String keterangan) {
+    public static void addData(String table, String[] list, String keterangan, String[] arg) {
         int id = getIdfromDatabase(table);
         switch (table) {
             case "OS_REAFILE" : {
@@ -241,7 +241,7 @@ public class Connec {
                     statement.setString(8, keterangan);
                     statement.setInt(9, 1);
                     statement.setString(10, list[0]);
-                    if (CSVService.checkValidationNomorUrutPengurus(list,"Nomor Urut Pengurus").equals("VALID")) {
+                    if (CSVService.checkValidationNomorUrutPengurus(list,"Nomor Urut Pengurus",arg).equals("VALID")) {
                         statement.setInt(11, Integer.parseInt(list[1]));
                     } else {
                         statement.setInt(11, 0);
@@ -339,6 +339,39 @@ public class Connec {
 
     }
 
+
+    public static boolean checkDBRealisasiforNoApplikasi(String[] arg) {
+        try (Connection connection = DatabaseHelper.getInstance().getConnection();
+            Statement statement = connection.createStatement();) {
+                String SQL = "select no_aplikasi as no from os_reafile where no_aplikasi = '" + arg[2] +"';";
+                ResultSet resultSet = statement.executeQuery(SQL);
+                while (resultSet.next()) {
+                    if (resultSet.getString("no").equals(arg[2])) {
+                        return true;
+                    }
+                }
+                resultSet.close();
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public static int checkjumlahPengurusinDatabase(String[] arg) {
+        try (Connection connection = DatabaseHelper.getInstance().getConnection();
+             Statement statement = connection.createStatement();) {
+            String SQL = "select jumlah_pengurus as jumlah from os_pengurus where no_aplikasi = '" + arg[2] +"';";
+            ResultSet resultSet = statement.executeQuery(SQL);
+            while (resultSet.next()) {
+                return resultSet.getInt("jumlah");
+            }
+            resultSet.close();
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
     public static void info(String message) {
         System.setProperty("log.property.location",
                 System.getProperty("batch.csvfv.log.properties"));
@@ -362,12 +395,12 @@ public class Connec {
         return retval;
     }
 
-
     public static String convertDateToString(java.util.Date dateValue, String dateFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         String retval = (("".equals(dateValue) || null == dateValue) ? "" : sdf.format(dateValue));
         return retval;
     }
+
     public static java.sql.Date convertStringToSQLDate(String dateValue, String dateFormat) {
         java.sql.Date retval = null;
         String dateValueFinal = null;
@@ -380,4 +413,5 @@ public class Connec {
         }
         return retval;
     }
+
 }

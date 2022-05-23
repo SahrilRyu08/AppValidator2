@@ -13,12 +13,14 @@ public class CSVFileValidatorExecutor {
 	private static Logger bLog = null;
 	private static List<File> files = new ArrayList<>();
 	public static void main(String[] args) {
-		args = new String[4];
+		args = new String[5];
 
-		args[0] = "";
-		args[1] = "";
-		args[2] = "v0.01"; // version
-		args[3] = "/home/lenovo/Documents/BCADProject/AppValidator/passed/";
+		args[0] = ""; // company code
+		args[1] = ""; // production code
+		args[2] = ""; // no application
+		args[3] = "v0.01"; // version
+		args[4] = "/home/lenovo/Documents/BCADProject/AppValidator/passed/";
+//		System.out.println(Connec.checkDBRealisasiforNoApplikasi(args));
 
 		System.setProperty("log.property.location",
 				System.getProperty("batch.csvfv.log.properties"));
@@ -28,7 +30,7 @@ public class CSVFileValidatorExecutor {
 				Scanner userInput = new Scanner(System.in); // Create a Scanner object
 				System.out.println("==============================================================");
 				System.out.println("                   CSV FILE VALIDATOR "
-						+ args[2]
+						+ args[3]
 						+ "                   ");
 				System.out
 						.println("==============================================================");
@@ -49,8 +51,8 @@ public class CSVFileValidatorExecutor {
 
 				case "1":
 					Connec.addfield("OS_REAFILE");
-					Connec.addfield("OS_PENGURUS");
-					Connec.addfield("OS_REPAYMENT");
+//					Connec.addfield("OS_PENGURUS");
+//					Connec.addfield("OS_REPAYMENT");
 					for (File myfile : myfiles) {
 						stringList.add(String.valueOf(myfile));
 					}
@@ -59,17 +61,24 @@ public class CSVFileValidatorExecutor {
 						String[] s1 = s.split("_");
 						args[0] = s1[1]; //company code
 						args[1] = s1[2]; //product code
+						if (s.contains("PENGURUS")) {
+							args[2] = s1[3];
+							System.out.println(args[0] + " " + args[1] + " " + args[2]);
+						} else {
+							System.out.println(args[0] + " " + args[1]);
+						}
 						start();
+
 						String pathfile = s1[0] + "_";
 						String exportFile = "";
 						if (pathfile.contains("REAFILE")) {
 							exportFile = "REAFILE_";
-						} else if (pathfile.contains("PENGURUS")) {
-							exportFile = "PENGURUS_";
-						} else if (pathfile.contains("REPAYMENT")) {
-							exportFile = "REPAYMENT_";
+//						} else if (pathfile.contains("PENGURUS")) {
+//							exportFile = "PENGURUS_";
+//						} else if (pathfile.contains("REPAYMENT")) {
+//							exportFile = "REPAYMENT_";
 						}
-						CSVService.writeFile(pathfile, args[0], args[1], exportFile);
+						CSVService.writeFile(pathfile, args, exportFile);
 						end();
 
 //			System.out.println(s1[1]);
@@ -81,7 +90,7 @@ public class CSVFileValidatorExecutor {
 				case "2":
 					for (File myfile : myfiles) {
 						CSVService.uploadToFileServer(myfile.getName()
-										.replace("srcfiles/", ""), args[3]);}
+										.replace("srcfiles/", ""), args[4]);}
 					break;
 				case "3":
 					break;
@@ -118,5 +127,4 @@ public class CSVFileValidatorExecutor {
 		File[] fileList = dirName.listFiles(filter);
 		return fileList;
 	}
-
 }
