@@ -223,7 +223,7 @@ public class Connec {
                 String sqlPengurus = "INSERT INTO " + table + "(" +
                         "id,created_by,updated_by,created_date,updated_date,status,respon_status,keterangan_gagal,os_reafile_id,no_aplikasi,no_urut,jumlah_pengurus,jabatan_cd,pangsa_kepemilikan,bentuk_pengurus,modal_dasar,modal_disetor,modal_ditempatkan,npwp,nama,alamat,kelurahan,kecamatan,dati2,no_ktp,no_akte,tgl_lahir,tgl_akte,dati2_tempat_lahir,gender_pengurus_cd)"
                         + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-                System.out.println(sqlPengurus);
+//                System.out.println(sqlPengurus);
                 try (Connection conn = DatabaseHelper.getInstance().getConnection();
                      PreparedStatement statement = conn.prepareStatement(sqlPengurus,Statement.RETURN_GENERATED_KEYS);) {
                     statement.setInt(1,id + 1);

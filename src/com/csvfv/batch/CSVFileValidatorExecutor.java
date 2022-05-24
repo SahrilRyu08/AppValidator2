@@ -2,10 +2,7 @@ package com.csvfv.batch;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +18,12 @@ public class CSVFileValidatorExecutor {
 		args[3] = "v0.01"; // version
 		args[4] = "/home/lenovo/Documents/BCADProject/AppValidator/passed/";
 //		System.out.println(Connec.checkDBRealisasiforNoApplikasi(args));
+
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add("REAFILE_");
+		list.add("PENGURUS_");
+		list.add("REPAYMENT_");
 
 		System.setProperty("log.property.location",
 				System.getProperty("batch.csvfv.log.properties"));
@@ -50,7 +53,7 @@ public class CSVFileValidatorExecutor {
 				switch (userChoice) {
 
 				case "1":
-					Connec.addfield("OS_REAFILE");
+//					Connec.addfield("OS_REAFILE");
 //					Connec.addfield("OS_PENGURUS");
 //					Connec.addfield("OS_REPAYMENT");
 					for (File myfile : myfiles) {
@@ -63,22 +66,18 @@ public class CSVFileValidatorExecutor {
 						args[1] = s1[2]; //product code
 						if (s.contains("PENGURUS")) {
 							args[2] = s1[3];
-							System.out.println(args[0] + " " + args[1] + " " + args[2]);
+//							System.out.println(args[0] + " " + args[1] + " " + args[2]);
 						} else {
-							System.out.println(args[0] + " " + args[1]);
+//							System.out.println(args[0] + " " + args[1]);
 						}
 						start();
 
 						String pathfile = s1[0] + "_";
-						String exportFile = "";
-						if (pathfile.contains("REAFILE")) {
-							exportFile = "REAFILE_";
-//						} else if (pathfile.contains("PENGURUS")) {
-//							exportFile = "PENGURUS_";
-//						} else if (pathfile.contains("REPAYMENT")) {
-//							exportFile = "REPAYMENT_";
+						for (String s2 : list) {
+//							CSVService.writeFile(pathfile, args, s2);
+							System.out.println(s2);
 						}
-						CSVService.writeFile(pathfile, args, exportFile);
+						System.out.println(pathfile);
 						end();
 
 //			System.out.println(s1[1]);

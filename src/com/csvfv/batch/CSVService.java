@@ -22,14 +22,15 @@ public class CSVService {
             while ((line = br.readLine()) != null) {
                 if (csvFile.contains("REAFILE")) {
                     result = CheckGroup(tempArr,55,arg, line,"realisasi");
-//                } else if (csvFile.contains("PENGURUS")) {
-//                    result = CheckGroup(tempArr,21,arg, line,"pengurus");
+                } else if (csvFile.contains("PENGURUS")) {
+                    result = CheckGroup(tempArr,21,arg, line,"pengurus");
 //                } else if (csvFile.contains("REPAYMENT")){
 //                    result = CheckGroup(tempArr,7,arg, line,"repayment");
                 }
                 arrayList.add(result);
             }
             br.close();
+//            System.out.println(csvFile);
         }
         catch(IOException ioe) {
             Connec.info("file not found or file different date");
@@ -38,37 +39,29 @@ public class CSVService {
     }
     public static void writeFile(String pathfile, String[] arg, String exportFile) {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy")).toString();
-        String path  = arg[0] + "_" + arg[1] + "_" + today + ".csv";
-        String impor = pathfile + path;
-        ArrayList<String> list = getFile(impor, arg);
+        ArrayList<String> list = new ArrayList<>();
         try {
+            String export =  "";
+            FileWriter succesFileWriter = null;
+            FileWriter failedFileWriter = null;
             if (exportFile.contains("PENGURUS")) {
-                FileWriter succesFileWriter = new FileWriter("result/Laporan_Berhasil_" +
-                        exportFile + arg + "_" + arg[1] + "_" + arg[2] + "_" + today + ".csv");
-                FileWriter failedFileWriter = new FileWriter("result/Laporan_Gagal_" +
-                        exportFile + arg + "_" + arg[1] + "_" + arg[2] + "_" + today + ".csv");
-                for (String s : list) {
-                    if (s.contains("OK")) {
-                        succesFileWriter.write(s + System.lineSeparator());
-                    } else {
-                        failedFileWriter.write(s + System.lineSeparator());
-                    }
-                }
-                succesFileWriter.close();
-                failedFileWriter.close();
+                export = exportFile + "_" + arg[0] + "_" + arg[1] + "_" + arg[2] + "_" + today + ".csv";
+                list = getFile(pathfile +  arg[0] + "_" + arg[1] + "_" + arg[2] + "_" + today + ".csv", arg);
             } else {
-                FileWriter succesFileWriter = new FileWriter("result/Laporan_Berhasil_" + exportFile + path);
-                FileWriter failedFileWriter = new FileWriter("result/Laporan_Gagal_" + exportFile + path);
-                for (String s : list) {
-                    if (s.contains("OK")) {
-                        succesFileWriter.write(s + System.lineSeparator());
-                    } else {
-                        failedFileWriter.write(s + System.lineSeparator());
-                    }
-                }
-                succesFileWriter.close();
-                failedFileWriter.close();
+                export = exportFile + "_" + arg[0] + "_" + arg[1]  + "_" + today + ".csv";
+                list = getFile(pathfile + arg[0] + "_" + arg[1] + "_" + today + ".csv", arg);
             }
+            succesFileWriter = new FileWriter("result/Laporan_Berhasil_" + export);
+            failedFileWriter = new FileWriter("result/Laporan_Gagal_" + export);
+            for (String s : list) {
+                if (s.contains("OK")) {
+                    succesFileWriter.write(s + System.lineSeparator());
+                } else {
+                    failedFileWriter.write(s + System.lineSeparator());
+                }
+            }
+            succesFileWriter.close();
+            failedFileWriter.close();
 
 //            Connec.info(impor);
 
@@ -96,18 +89,18 @@ public class CSVService {
             case "realisasi":
 //                System.out.println(Arrays.toString(tempArr));
                 Connec.addData("OS_REAFILE", tempArr, keterangan, arg);
-                Connec.info(filename);
+//                Connec.info(filename);
                 break;
             case "pengurus":
 //                System.out.println(Arrays.toString(tempArr));
                 Connec.addData("OS_PENGURUS", tempArr, keterangan, arg);
-                Connec.info(filename);
+//                Connec.info(filename);
                 break;
-            case "repayment":
-//                System.out.println(Arrays.toString(tempArr));
-                Connec.addData("OS_REPAYMENT", tempArr, keterangan, arg);
-                Connec.info(filename);
-                break;
+//            case "repayment":
+////                System.out.println(Arrays.toString(tempArr));
+//                Connec.addData("OS_REPAYMENT", tempArr, keterangan, arg);
+//                Connec.info(filename);
+//                break;
         }
         return result;
     }
@@ -172,7 +165,7 @@ public class CSVService {
                 listCheck.add(checkvalidationDebtorCategory(tempArr[52], "Debtor Category"));
                 listCheck.add(checkvalidationIncomeSource(tempArr[2], tempArr[53], "Income Source"));
                 listCheck.add(checkvalidationJumlahTanggungan(tempArr, "Jumlah Tanggungan"));
-                Connec.info("listCheckRealisasi");
+//                Connec.info("listCheckRealisasi");
                 break;
             case "pengurus":
                 listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", arg, nameFile));
@@ -196,7 +189,7 @@ public class CSVService {
                 listCheck.add(checkValidationTanggal_Akte(tempArr[5], tempArr[18], "Tanggal Akte"));
                 listCheck.add(checkValidationDati_II_tempat_lahir(tempArr[5], tempArr[19], "Dati II tempat lahir"));
                 listCheck.add(checkValidationJenis_Kelamin_Pengurus(tempArr[20], "Jenis Kelamin Pengurus"));
-                Connec.info("listCheckPengurus");
+//                Connec.info("listCheckPengurus");
                 break;
             case "repayment":
                 listCheck.add(checkValidationNomorAplikasi(tempArr[0], "Nomor Aplikasi", arg, nameFile));
@@ -204,7 +197,7 @@ public class CSVService {
                 listCheck.add(checkValidationTanggalPembayaran(tempArr[2], "Tanggal Pembayaran"));
                 listCheck.addAll(checkValidationNominal(tempArr));
                 listCheck.add(checkValidationPelunasan(tempArr[6]));
-                Connec.info("listCheckRepayment");
+//                Connec.info("listCheckRepayment");
                 break;
         }
         for (String s : listCheck) {
@@ -494,8 +487,8 @@ public class CSVService {
             return MessageUtil.NotEmptyMessage(nomor_urut_pengurus);
         } else if (!listPengurus[1].matches("^[0-9]+$")) {
             return MessageUtil.ErrorWithMessage(nomor_urut_pengurus, " Bukan Numeric");
-        } else if (listPengurus[1].length() <= 0 || Integer.parseInt(listPengurus[1]) > Connec.checkjumlahPengurusinDatabase(arg)) {
-            return MessageUtil.ErrorNotValid(nomor_urut_pengurus);
+//        } else if (Integer.parseInt(listPengurus[1]) > Connec.checkjumlahPengurusinDatabase(arg)) {
+//            return MessageUtil.ErrorNotValid(nomor_urut_pengurus);
         }
         return "VALID";
     }
@@ -1033,10 +1026,10 @@ public class CSVService {
     public static String checkValidationNomorAplikasi(String nomorAplikasi, String nomor_aplikasi, String[] arg, String nameFile) {
         if (nomorAplikasi.isEmpty()) {
             return MessageUtil.NotEmptyMessage(nomor_aplikasi);
-        } else if (nameFile.equals("pengurus")) {
-            if (Connec.checkDBRealisasiforNoApplikasi(arg)) {
-                return MessageUtil.ErrorWithMessage(nomor_aplikasi,"Nomor Aplikasi tidak terdaftar");
-            }
+//        } else if (nameFile.equals("pengurus")) {
+//            if (Connec.checkDBRealisasiforNoApplikasi(arg)) {
+//                return MessageUtil.ErrorWithMessage(nomor_aplikasi,"Nomor Aplikasi tidak terdaftar");
+//            }
         } else if (nomorAplikasi.length() != 17 || !nomorAplikasi.substring(0, 7).matches("^[a-zA-Z0-9]+$")) {
             return MessageUtil.ErrorNotValid(nomor_aplikasi);
         } else if (!nomorAplikasi.substring(0,7).equals(arg[1].substring(0,7))){
